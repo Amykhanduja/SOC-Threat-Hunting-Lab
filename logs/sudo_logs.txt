@@ -1,0 +1,17 @@
+2026-05-27T12:22:52.542865+00:00 Ammy7203 sudo: amykhanduja_7203 : 3 incorrect password attempts ; TTY=pts/0 ; PWD=/mnt/c/Users/khand ; USER=root ; COMMAND=/usr/bin/apt install python3-pip
+2026-05-27T12:22:59.251266+00:00 Ammy7203 sudo: amykhanduja_7203 : TTY=pts/0 ; PWD=/mnt/c/Users/khand ; USER=root ; COMMAND=/usr/bin/apt install python3-pip
+2026-05-27T13:08:10.165129+00:00 Ammy7203 sudo: amykhanduja_7203 : TTY=pts/0 ; PWD=/mnt/c/Users/khand/jwt_tool ; USER=root ; COMMAND=/usr/bin/apt update
+2026-05-27T13:08:32.411705+00:00 Ammy7203 sudo: amykhanduja_7203 : TTY=pts/0 ; PWD=/mnt/c/Users/khand/jwt_tool ; USER=root ; COMMAND=/usr/bin/apt install wordlists -y
+2026-05-27T19:24:32.395042+00:00 Ammy7203 sudo: amykhanduja_7203 : TTY=pts/0 ; PWD=/mnt/c/Users/khand/jwt_tool ; USER=root ; COMMAND=/usr/bin/apt install john
+2026-05-28T06:43:59.483462+00:00 Ammy7203 sudo: amykhanduja_7203 : TTY=pts/0 ; PWD=/mnt/c/Users/khand/jwt_tool ; USER=root ; COMMAND=/usr/bin/apt install john -y
+2026-05-28T09:36:03.923271+00:00 Ammy7203 sudo: amykhanduja_7203 : TTY=pts/0 ; PWD=/home/amykhanduja_7203 ; USER=root ; COMMAND=/usr/bin/apt install openjdk-21-jdk -y
+2026-06-02T19:01:01.043960+00:00 Ammy7203 sudo: amykhanduja_7203 : TTY=pts/0 ; PWD=/home/amykhanduja_7203/SOC-Threat-Hunting-Lab ; USER=root ; COMMAND=/usr/bin/apt update
+2026-06-02T19:01:14.035139+00:00 Ammy7203 sudo: amykhanduja_7203 : TTY=pts/0 ; PWD=/home/amykhanduja_7203/SOC-Threat-Hunting-Lab ; USER=root ; COMMAND=/usr/bin/apt install tree -y
+2026-06-02T19:03:47.315667+00:00 Ammy7203 sudo: amykhanduja_7203 : TTY=pts/0 ; PWD=/home/amykhanduja_7203/SOC-Threat-Hunting-Lab ; USER=root ; COMMAND=/usr/sbin/service ssh status
+2026-06-02T19:03:53.250688+00:00 Ammy7203 sudo: amykhanduja_7203 : TTY=pts/0 ; PWD=/home/amykhanduja_7203/SOC-Threat-Hunting-Lab ; USER=root ; COMMAND=/usr/bin/apt update
+2026-06-02T19:03:56.072567+00:00 Ammy7203 sudo: amykhanduja_7203 : TTY=pts/0 ; PWD=/home/amykhanduja_7203/SOC-Threat-Hunting-Lab ; USER=root ; COMMAND=/usr/bin/apt install openssh-server -y
+2026-06-02T19:05:21.735361+00:00 Ammy7203 sudo: amykhanduja_7203 : TTY=pts/0 ; PWD=/home/amykhanduja_7203/SOC-Threat-Hunting-Lab ; USER=root ; COMMAND=/usr/sbin/adduser attacker
+2026-06-02T19:06:15.952351+00:00 Ammy7203 sudo: amykhanduja_7203 : TTY=pts/0 ; PWD=/home/amykhanduja_7203/SOC-Threat-Hunting-Lab ; USER=root ; COMMAND=/usr/sbin/service ssh status
+2026-06-02T19:07:12.609036+00:00 Ammy7203 sudo: amykhanduja_7203 : TTY=pts/0 ; PWD=/home/amykhanduja_7203/SOC-Threat-Hunting-Lab ; USER=root ; COMMAND=/usr/bin/tail -f /var/log/auth.log
+2026-06-02T19:08:18.716780+00:00 Ammy7203 sudo: amykhanduja_7203 : TTY=pts/2 ; PWD=/mnt/c/Users/khand ; USER=root ; COMMAND=/usr/sbin/service ssh status
+2026-06-02T19:13:50.815324+00:00 Ammy7203 sudo: amykhanduja_7203 : TTY=pts/0 ; PWD=/home/amykhanduja_7203/SOC-Threat-Hunting-Lab ; USER=root ; COMMAND=/usr/bin/tail -f /var/log/auth.log

@@ -1,0 +1,24 @@
+SOC ALERT REPORT
+========================
+
+[HIGH]
+Alert Type: SSH Brute Force
+
+Source IP: 127.0.0.1
+Attempts: 9
+
+MITRE: T1110
+
+-------------------------
+
+[MEDIUM]
+Alert Type: Privilege Escalation
+
+MITRE: T1078
+
+-------------------------
+
+[MEDIUM]
+Alert Type: New User Creation
+
+MITRE: T1136
