@@ -1,0 +1,71 @@
+[
+    {
+        "timestamp": "2026-06-03T12:17:54.044563",
+        "ip": "127.0.0.1",
+        "attack": "SSH Brute Force",
+        "severity": "HIGH",
+        "mitre": "T1110"
+    },
+    {
+        "ip": "10.0.0.5",
+        "attack": "sudo abuse",
+        "severity": "LOW",
+        "mitre": "T1078"
+    },
+    {
+        "timestamp": "2026-06-04T05:39:13.559834",
+        "ip": "127.0.0.1",
+        "attack": "SSH Brute Force",
+        "severity": "HIGH",
+        "mitre": "T1110"
+    },
+    {
+        "timestamp": "2026-06-04T06:01:11.024195",
+        "ip": "127.0.0.1",
+        "attack": "SSH Brute Force",
+        "severity": "HIGH",
+        "mitre": "T1110"
+    },
+    {
+        "timestamp": "2026-06-04T06:02:45.135571",
+        "ip": "amykhanduja_7203",
+        "attack": "Privilege Escalation",
+        "severity": "CRITICAL",
+        "mitre": "T1078"
+    },
+    {
+        "timestamp": "2026-06-04T06:03:55.688019",
+        "ip": "amykhanduja_7203",
+        "attack": "Privilege Escalation",
+        "severity": "CRITICAL",
+        "mitre": "T1078"
+    },
+    {
+        "timestamp": "2026-06-04T06:04:26.956653",
+        "ip": "127.0.0.1",
+        "attack": "SSH Brute Force",
+        "severity": "HIGH",
+        "mitre": "T1110"
+    },
+    {
+        "timestamp": "2026-06-04T06:04:35.980826",
+        "ip": "127.0.0.1",
+        "attack": "SSH Brute Force",
+        "severity": "HIGH",
+        "mitre": "T1110"
+    },
+    {
+        "timestamp": "2026-06-04T06:04:50.213261",
+        "ip": "127.0.0.1",
+        "attack": "SSH Brute Force",
+        "severity": "HIGH",
+        "mitre": "T1110"
+    },
+    {
+        "timestamp": "2026-06-04T06:05:17.473366",
+        "ip": "amykhanduja_7203",
+        "attack": "Privilege Escalation",
+        "severity": "CRITICAL",
+        "mitre": "T1078"
+    }
+]

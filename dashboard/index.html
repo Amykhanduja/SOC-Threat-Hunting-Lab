@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SOC Threat Hunting Lab</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0d1117;color:#c9d1d9;font-family:'Segoe UI',system-ui,sans-serif;font-size:14px}
+  header{background:#161b22;border-bottom:1px solid #30363d;padding:14px 28px;display:flex;align-items:center;justify-content:space-between}
+  header h1{font-size:16px;font-weight:600;color:#f0f6fc;letter-spacing:.3px}
+  header h1 span{color:#f85149;margin-right:8px}
+  #live-dot{width:8px;height:8px;border-radius:50%;background:#3fb950;display:inline-block;margin-right:6px;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  #last-updated{font-size:11px;color:#8b949e}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:20px 28px 0}
+  .stat-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:16px 20px}
+  .stat-card .label{font-size:11px;color:#8b949e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+  .stat-card .value{font-size:28px;font-weight:600;color:#f0f6fc}
+  .stat-card.critical .value{color:#f85149}
+  .stat-card.high .value{color:#e3b341}
+  .stat-card.medium .value{color:#58a6ff}
+  .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px 28px 0}
+  .chart-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:16px 20px}
+  .chart-card h3{font-size:12px;color:#8b949e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+  .bar-group{margin-bottom:10px}
+  .bar-label{display:flex;justify-content:space-between;font-size:12px;color:#c9d1d9;margin-bottom:4px}
+  .bar-track{background:#21262d;border-radius:4px;height:8px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:4px;transition:width .6s ease}
+  .bar-fill.bf{background:#f85149}
+  .bar-fill.esc{background:#e3b341}
+  .bar-fill.acc{background:#58a6ff}
+  .technique-list{list-style:none}
+  .technique-list li{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #21262d;font-size:12px}
+  .technique-list li:last-child{border-bottom:none}
+  .t-id{color:#58a6ff;font-weight:600;font-family:monospace}
+  .t-name{color:#c9d1d9}
+  .t-count{background:#21262d;color:#8b949e;padding:2px 8px;border-radius:4px;font-size:11px}
+  .alerts-section{padding:12px 28px 24px}
+  .alerts-section h3{font-size:12px;color:#8b949e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+  table{width:100%;border-collapse:collapse;background:#161b22;border:1px solid #30363d;border-radius:8px;overflow:hidden}
+  thead tr{background:#21262d}
+  th{padding:10px 14px;text-align:left;font-size:11px;color:#8b949e;text-transform:uppercase;letter-spacing:.4px;font-weight:500}
+  td{padding:9px 14px;border-bottom:1px solid #21262d;font-size:12px;color:#c9d1d9;vertical-align:top}
+  tbody tr:hover{background:#1c2128}
+  tbody tr:last-child td{border-bottom:none}
+  .sev{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.4px}
+  .sev.CRITICAL{background:#3d1a1a;color:#f85149;border:1px solid #f8514940}
+  .sev.HIGH{background:#2d2008;color:#e3b341;border:1px solid #e3b34140}
+  .sev.MEDIUM{background:#0d1f38;color:#58a6ff;border:1px solid #58a6ff40}
+  .tech-tag{font-family:monospace;font-size:11px;color:#58a6ff;background:#0d1f38;padding:2px 6px;border-radius:4px}
+  .type-tag{font-size:11px;color:#3fb950}
+  .detail-cell{max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#8b949e;font-size:11px;font-family:monospace}
+  .empty{text-align:center;color:#8b949e;padding:32px;font-size:13px}
+  .filter-row{display:flex;gap:8px;margin-bottom:10px}
+  .filter-btn{background:#21262d;border:1px solid #30363d;color:#8b949e;padding:4px 12px;border-radius:4px;font-size:12px;cursor:pointer}
+  .filter-btn.active{background:#1f6feb;border-color:#1f6feb;color:#fff}
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span>⬡</span> SOC Threat Hunting Lab — Live Dashboard</h1>
+  <div style="display:flex;align-items:center;gap:16px">
+    <span><span id="live-dot"></span><span style="font-size:12px;color:#3fb950">LIVE</span></span>
+    <span id="last-updated" style="font-size:11px;color:#8b949e">Updating...</span>
+  </div>
+</header>
+
+<div class="grid">
+  <div class="stat-card"><div class="label">Total Alerts</div><div class="value" id="s-total">—</div></div>
+  <div class="stat-card critical"><div class="label">Critical</div><div class="value" id="s-critical">—</div></div>
+  <div class="stat-card high"><div class="label">High</div><div class="value" id="s-high">—</div></div>
+  <div class="stat-card medium"><div class="label">Medium</div><div class="value" id="s-medium">—</div></div>
+</div>
+
+<div class="charts-row">
+  <div class="chart-card">
+    <h3>Attack Distribution</h3>
+    <div class="bar-group">
+      <div class="bar-label"><span>Brute Force</span><span id="c-bf">0</span></div>
+      <div class="bar-track"><div class="bar-fill bf" id="bar-bf" style="width:0%"></div></div>
+    </div>
+    <div class="bar-group">
+      <div class="bar-label"><span>Privilege Escalation</span><span id="c-esc">0</span></div>
+      <div class="bar-track"><div class="bar-fill esc" id="bar-esc" style="width:0%"></div></div>
+    </div>
+    <div class="bar-group">
+      <div class="bar-label"><span>Account Creation</span><span id="c-acc">0</span></div>
+      <div class="bar-track"><div class="bar-fill acc" id="bar-acc" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="chart-card">
+    <h3>MITRE ATT&CK Coverage</h3>
+    <ul class="technique-list">
+      <li><span class="t-id">T1110</span><span class="t-name">Brute Force</span><span class="t-count" id="m-t1110">0</span></li>
+      <li><span class="t-id">T1078</span><span class="t-name">Valid Accounts / Priv Esc</span><span class="t-count" id="m-t1078">0</span></li>
+      <li><span class="t-id">T1136</span><span class="t-name">Create Account</span><span class="t-count" id="m-t1136">0</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="alerts-section">
+  <h3>Alert Feed</h3>
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="setFilter('ALL')">All</button>
+    <button class="filter-btn" onclick="setFilter('CRITICAL')">Critical</button>
+    <button class="filter-btn" onclick="setFilter('HIGH')">High</button>
+    <button class="filter-btn" onclick="setFilter('MEDIUM')">Medium</button>
+    <button class="filter-btn" onclick="setFilter('Brute Force')">Brute Force</button>
+    <button class="filter-btn" onclick="setFilter('Privilege Escalation')">Priv Esc</button>
+    <button class="filter-btn" onclick="setFilter('Account Creation')">Account Creation</button>
+  </div>
+  <table>
+    <thead><tr>
+      <th>Time</th><th>Type</th><th>Technique</th><th>Severity</th><th>Detail</th>
+    </tr></thead>
+    <tbody id="alert-tbody"></tbody>
+  </table>
+</div>
+
+<script>
+let allAlerts = [];
+let currentFilter = 'ALL';
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim() === f || (f==='ALL' && b.textContent.trim()==='All'));
+  });
+  renderTable();
+}
+
+function renderTable() {
+  const tbody = document.getElementById('alert-tbody');
+  const filtered = currentFilter === 'ALL'
+    ? allAlerts
+    : allAlerts.filter(a => a.severity === currentFilter || a.type === currentFilter);
+
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="5" class="empty">No alerts found</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(a => `
+    <tr>
+      <td style="font-family:monospace;font-size:11px;white-space:nowrap">${a.time}</td>
+      <td><span class="type-tag">${a.type}</span></td>
+      <td><span class="tech-tag">${a.technique}</span></td>
+      <td><span class="sev ${a.severity}">${a.severity}</span></td>
+      <td class="detail-cell" title="${a.detail}">${a.detail}</td>
+    </tr>`).join('');
+}
+
+async function fetchStats() {
+  try {
+    const r = await fetch('http://localhost:8000/api/stats');
+    const s = await r.json();
+    document.getElementById('s-total').textContent    = s.total;
+    document.getElementById('s-critical').textContent = s.critical;
+    document.getElementById('s-high').textContent     = s.high;
+    document.getElementById('s-medium').textContent   = s.medium;
+    document.getElementById('c-bf').textContent  = s.bruteforce;
+    document.getElementById('c-esc').textContent = s.escalation;
+    document.getElementById('c-acc').textContent = s.account;
+    document.getElementById('m-t1110').textContent = s.bruteforce;
+    document.getElementById('m-t1078').textContent = s.escalation;
+    document.getElementById('m-t1136').textContent = s.account;
+    const max = Math.max(s.bruteforce, s.escalation, s.account, 1);
+    document.getElementById('bar-bf').style.width  = (s.bruteforce/max*100)+'%';
+    document.getElementById('bar-esc').style.width = (s.escalation/max*100)+'%';
+    document.getElementById('bar-acc').style.width = (s.account/max*100)+'%';
+  } catch(e) { console.warn('Stats fetch failed', e); }
+}
+
+async function fetchAlerts() {
+  try {
+    const r = await fetch('http://localhost:8000/api/alerts');
+    allAlerts = await r.json();
+    renderTable();
+    document.getElementById('last-updated').textContent =
+      'Last updated: ' + new Date().toLocaleTimeString();
+  } catch(e) { console.warn('Alerts fetch failed', e); }
+}
+
+function refresh() { fetchStats(); fetchAlerts(); }
+refresh();
+setInterval(refresh, 3000);
+</script>
+</body>
+</html>

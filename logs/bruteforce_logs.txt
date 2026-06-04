@@ -7,3 +7,7 @@
 2026-06-02T19:08:52.692930+00:00 Ammy7203 sshd[1961]: Failed password for invalid user fakeuser from 127.0.0.1 port 41470 ssh2
 2026-06-02T19:08:58.881850+00:00 Ammy7203 sshd[1961]: Failed password for invalid user fakeuser from 127.0.0.1 port 41470 ssh2
 2026-06-02T19:09:04.049729+00:00 Ammy7203 sshd[1961]: Failed password for invalid user fakeuser from 127.0.0.1 port 41470 ssh2
+2026-06-04T06:01:11.025973 SSH Brute Force Detected - Source IP: 127.0.0.1 Attempts: 3 MITRE: T1110
+2026-06-04T06:04:26.957632 SSH Brute Force Detected - Source IP: 127.0.0.1 Attempts: 4 MITRE: T1110
+2026-06-04T06:04:35.981356 SSH Brute Force Detected - Source IP: 127.0.0.1 Attempts: 5 MITRE: T1110
+2026-06-04T06:04:50.214119 SSH Brute Force Detected - Source IP: 127.0.0.1 Attempts: 6 MITRE: T1110

@@ -1,0 +1,24 @@
+title: Privilege Escalation via Sudo
+
+id: 003
+
+status: experimental
+
+description: Detects sudo usage
+
+author: Amratya Khanduja
+
+logsource:
+  product: linux
+
+detection:
+  selection:
+    message|contains:
+      - "sudo"
+
+  condition: selection
+
+level: medium
+
+tags:
+  - attack.t1078
