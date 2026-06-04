@@ -1,7 +1,8 @@
 # SOC Threat Detection & Hunting Lab
 
 > A hands-on Security Operations Center simulation built on a real Linux environment — detecting, alerting, and visualising live attacks mapped to MITRE ATT&CK.
-
+## Dashboard Preview
+![SOC Dashboard](screenshots/dshboard.png)
 ---
 
 ## What This Project Does
