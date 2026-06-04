@@ -1,2 +1,0 @@
-2026-06-02T19:03:59.988663+00:00 Ammy7203 useradd[1595]: new user: name=sshd, UID=105, GID=65534, home=/run/sshd, shell=/usr/sbin/nologin, from=none
-2026-06-02T19:05:21.923659+00:00 Ammy7203 useradd[1799]: new user: name=attacker, UID=1001, GID=1001, home=/home/attacker, shell=/bin/bash, from=/dev/pts/2
