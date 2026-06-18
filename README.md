@@ -1,18 +1,24 @@
 # SOC Threat Detection & Hunting Lab
 
-<<<<<<< HEAD
-> A hands-on Security Operations Center simulation built on a real Linux environment — detecting, alerting, and visualising live attacks mapped to MITRE ATT&CK.
+>SOC Threat Hunting Lab is a custom-built security monitoring platform that performs real-time analysis of Linux authentication logs to detect suspicious activities such as SSH brute-force attacks, privilege escalation attempts, and account creation events. The project integrates MITRE ATT&CK mapping, confidence-based alert scoring, dynamic severity classification, alert suppression, and TP/FP tracking to simulate real-world SOC detection engineering workflows. A live dashboard provides visibility into alerts, detection quality metrics, and false positive rates.
 ## Dashboard Preview
-![SOC Dashboard](screenshots/dshboard.png)
-=======
-> A hands-on Security Operations Center simulation built on a real Linux environment — detecting, alerting, and visualising live attacks mapped to MITRE attack
-
->>>>>>> fd5a692 (Add confidence scoring, alert suppression, TP/FP review system and FPR metrics)
+![SOC Dashboard](screenshots/dashboard.png)
+======
 ---
 
 ## What This Project Does
 
-This lab simulates a real SOC analyst workflow on a local Linux machine. It generates actual attack traffic, detects it in real time using a custom Python engine, and displays everything on a live web dashboard — no cloud, no paid tools, no shortcuts.
+* Monitors Linux authentication logs (`auth.log`) in real time.
+* Detects SSH brute-force attacks, privilege escalation attempts, and account creation events.
+* Maps detections to relevant MITRE ATT&CK techniques.
+* Assigns confidence scores and dynamically classifies alert severity.
+* Reduces alert noise through alert suppression mechanisms.
+* Stores indicators of compromise (IOCs) and alert data for analysis.
+* Provides a live SOC dashboard for monitoring security events.
+* Supports analyst review workflows through True Positive (TP) and False Positive (FP) classification.
+* Calculates detection quality metrics, including False Positive Rate (FPR).
+* Helps evaluate and improve the effectiveness of security detections.
+
 
 ---
 
@@ -20,26 +26,58 @@ This lab simulates a real SOC analyst workflow on a local Linux machine. It gene
 
 ```
 Attack Simulation
-      │
-      ▼
-/var/log/auth.log        (Linux system log — real entries)
-      │
-      ▼
-realtime_monitor.py      (custom detection engine)
-      │
-      ├── logs/bruteforce_logs.txt
-      ├── logs/sudo_logs.txt
-      ├── logs/user_creation_logs.txt
-      └── iocs/iocs.json
-                │
-                ▼
-          server.py       (pure Python HTTP server — zero dependencies)
-                │
-                ▼
-       dashboard/index.html   (live SPA — auto-refreshes every 3s)
+(SSH Brute Force | Sudo Abuse | User Creation)
+                     │
+                     ▼
+            /var/log/auth.log
+        (Linux Authentication Logs)
+                     │
+                     ▼
+         realtime_monitor.py
+      (Real-Time Detection Engine)
+                     │
+     ┌───────────────┼───────────────┐
+     │               │               │
+     ▼               ▼               ▼
+SSH Brute      Privilege       Account
+Force          Escalation      Creation
+(T1110)         (T1078)         (T1136)
+     │               │               │
+     └───────────────┼───────────────┘
+                     ▼
+          Alert Processing Layer
+      • Confidence Scoring
+      • Dynamic Severity
+      • Alert Suppression
+                     │
+                     ▼
+             Storage Layer
+      ├── alerts/alerts.json
+      ├── iocs/iocs.json
+      └── logs/*.txt
+                     │
+          ┌──────────┴──────────┐
+          ▼                     ▼
+ Detection Quality       MITRE Mapping
+      • TP/FP              • T1110
+      • FPR                • T1078
+      • Health Metrics     • T1136
+          │                     │
+          └──────────┬──────────┘
+                     ▼
+                server.py
+       (Pure Python HTTP Server)
+                     │
+                     ▼
+          dashboard/index.html
+            (Live SOC Dashboard)
+                     │
+     ┌───────────────┼───────────────┐
+     ▼               ▼               ▼
+ Alert Feed    Attack Stats    Detection Quality
+                                     &
+                              False Positive Rate
 ```
-
----
 
 ## Attack Coverage
 ________________________________________________________________________________________________________
@@ -108,6 +146,14 @@ start_dashboard.sh
 
 Dashboard opens at **http://localhost:8000**
 
+### 4. To Mark any alert as TP/FP
+
+python3 review_alert.py ALERT_ID TP/FP
+
+
+## 5. View Detection Metrics
+
+python3 metrics.py
 
 ---
 

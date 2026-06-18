@@ -6,7 +6,7 @@
         "ip": "127.0.0.1",
         "confidence": 40,
         "severity": "Medium",
-        "review_status": "FP"
+        "review_status": "TP"
     },
     {
         "alert_id": "ALT-9619e364",
@@ -15,7 +15,7 @@
         "ip": "127.0.0.1",
         "confidence": 40,
         "severity": "Medium",
-        "review_status": "Pending"
+        "review_status": "TP"
     },
     {
         "alert_id": "ALT-1d580bb8",
@@ -24,6 +24,6 @@
         "ip": "127.0.0.1",
         "confidence": 70,
         "severity": "High",
-        "review_status": "Pending"
+        "review_status": "FP"
     }
 ]
