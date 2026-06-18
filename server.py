@@ -5,7 +5,8 @@ from urllib.parse import urlparse
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 
-# ── log parsers ──────────────────────────────────────────────────────────────
+
+#------─ log parsers ──────────────────────────────────────────────────────────────
 
 def extract_time(line):
     m = re.search(r'\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}', line)
@@ -51,6 +52,46 @@ def get_stats():
         "medium":     len([a for a in alerts if a["severity"]  == "MEDIUM"]),
     }
 
+def get_fp_stats():
+
+    try:
+        with open("alerts/alerts.json", "r") as f:
+            alerts = json.load(f)
+    except:
+        alerts = []
+
+    total = len(alerts)
+
+    tp = sum(
+        1 for a in alerts
+        if a.get("review_status") == "TP"
+    )
+
+    fp = sum(
+        1 for a in alerts
+        if a.get("review_status") == "FP"
+    )
+
+    pending = sum(
+        1 for a in alerts
+        if a.get("review_status") == "Pending"
+    )
+
+    reviewed = tp + fp
+
+    fp_rate = round(
+        (fp / reviewed) * 100,
+        2
+    ) if reviewed > 0 else 0
+
+    return {
+        "total": total,
+        "tp": tp,
+        "fp": fp,
+        "pending": pending,
+        "fp_rate": fp_rate
+    }
+
 def get_iocs():
     path = os.path.join(BASE, "iocs", "iocs.json")
     if not os.path.exists(path): return []
@@ -72,7 +113,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.send_json(get_stats())
         elif path == "/api/iocs":
             self.send_json(get_iocs())
-
+        elif path == "/api/fp_stats":
+            self.send_json(get_fp_stats())
         # Serve dashboard HTML
         elif path == "/" or path == "/dashboard":
             self.serve_file(os.path.join(BASE, "dashboard", "index.html"), "text/html")

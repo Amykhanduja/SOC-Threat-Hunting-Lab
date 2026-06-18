@@ -7,5 +7,23 @@
         "confidence": 40,
         "severity": "Medium",
         "review_status": "FP"
+    },
+    {
+        "alert_id": "ALT-9619e364",
+        "timestamp": "2026-06-18 15:06:00 IST",
+        "type": "SSH Brute Force",
+        "ip": "127.0.0.1",
+        "confidence": 40,
+        "severity": "Medium",
+        "review_status": "Pending"
+    },
+    {
+        "alert_id": "ALT-1d580bb8",
+        "timestamp": "2026-06-18 15:06:15 IST",
+        "type": "SSH Brute Force",
+        "ip": "127.0.0.1",
+        "confidence": 70,
+        "severity": "High",
+        "review_status": "Pending"
     }
 ]
