@@ -245,7 +245,7 @@ Each alert is stored with:
 
 Review statuses:
 
-* Pending
+* Pending( waiting to be checked)
 * TP (True Positive)
 * FP (False Positive)
 
