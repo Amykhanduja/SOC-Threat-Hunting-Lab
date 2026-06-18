@@ -1,8 +1,13 @@
 # SOC Threat Detection & Hunting Lab
 
+<<<<<<< HEAD
 > A hands-on Security Operations Center simulation built on a real Linux environment — detecting, alerting, and visualising live attacks mapped to MITRE ATT&CK.
 ## Dashboard Preview
 ![SOC Dashboard](screenshots/dshboard.png)
+=======
+> A hands-on Security Operations Center simulation built on a real Linux environment — detecting, alerting, and visualising live attacks mapped to MITRE attack
+
+>>>>>>> fd5a692 (Add confidence scoring, alert suppression, TP/FP review system and FPR metrics)
 ---
 
 ## What This Project Does
@@ -51,6 +56,11 @@ ________________________________________________________________________________
 
 ```
 SOC-Threat-Hunting-Lab/
+|
+|--alerts/
+| |--alerts.json                   #Alert Review Workflow
+| |--review.json                   #TP/FP tracking
+|
 ├── detections/
 │   ├── detection_engine.py        # Static log analyser
 │   └── realtime_monitor.py        # Live tail-based detection engine
@@ -60,6 +70,7 @@ SOC-Threat-Hunting-Lab/
 │   ├── bruteforce_logs.txt        # T1110 alerts
 │   ├── sudo_logs.txt              # T1078 alerts
 │   └── user_creation_logs.txt     # T1136 alerts
+|--metrics.py                      # False Positive Rate Calculation
 ├── mitre/
 │   └── mitre_mapping.md           # ATT&CK technique documentation
 ├── reports/
@@ -127,6 +138,94 @@ ssh $USER@localhost
 
 ---
 
+## Recent Enhancements
+
+### Confidence-Based Detection Scoring
+
+The SSH Brute Force detection engine now assigns a confidence score based on the number of failed authentication attempts observed from a source IP.
+
+| Failed Attempts | Confidence |
+| --------------- | ---------- |
+| 3+              | 40%        |
+| 5+              | 70%        |
+| 10+             | 100%       |
+
+This helps prioritise alerts and reduces analyst fatigue by providing a quantitative measure of detection confidence.
+
+---
+
+### Dynamic Severity Classification
+
+Alert severity is now calculated automatically from confidence scores.
+
+| Confidence | Severity |
+| ---------- | -------- |
+| 0–39%      | Low      |
+| 40–59%     | Medium   |
+| 60–79%     | High     |
+| 80–100%    | Critical |
+
+This enables risk-based alert prioritisation similar to modern SOC workflows.
+
+---
+
+### Alert Suppression & Noise Reduction
+
+To reduce duplicate alerts and alert fatigue, the engine suppresses repeated alerts when severity remains unchanged.
+
+Example:
+
+* 3 failed attempts → Medium Alert
+* 4 failed attempts → Suppressed
+* 5 failed attempts → High Alert
+* 6–9 failed attempts → Suppressed
+* 10 failed attempts → Critical Alert
+
+This significantly reduces alert noise while preserving important escalation events.
+
+---
+
+### False Positive Tracking Framework
+
+A review workflow has been implemented to support detection quality assessment.
+
+Each alert is stored with:
+
+* Unique Alert ID
+* Timestamp
+* Severity
+* Confidence Score
+* Review Status
+
+Review statuses:
+
+* Pending
+* TP (True Positive)
+* FP (False Positive)
+
+This enables structured alert validation and continuous detection improvement.
+
+---
+
+### Detection Quality Metrics
+
+A dedicated metrics module calculates:
+
+* Total Alerts
+* True Positives (TP)
+* False Positives (FP)
+* Pending Reviews
+* False Positive Rate (FPR)
+
+Formula:
+
+FPR = FP / (TP + FP) × 100
+
+This provides measurable insight into detection accuracy and rule effectiveness.
+
+
+
+---
 ## Dashboard Features
 
 - **4 live stat cards** — Total alerts, Critical, High, Medium (auto-refresh every 3s)
@@ -188,17 +287,19 @@ tags:
 ---
 
 ## Skills Demonstrated
-_______________________________________________________________________________________________
-| Area                      | What Was Done                                                   |
-|---------------------------|-----------------------------------------------------------------|
-| Detection Engineering     | Built custom Python engine parsing real Linux auth logs         |
-| Threat Hunting            | Correlated failed logins, privilege events, account creation    |
-| MITRE ATT&CK              | Mapped all detections to T1110, T1078, T1136                    |
-| Incident Response         | Produced structured IR reports with root-cause and remediation  |
-| Sigma Rules               | Wrote portable detection rules for all three techniques         |
-| Dashboard / Visualisation | Built zero-dependency live SPA with Python HTTP server          |
-| IOC Management            | Auto-populated IOC store with IP, timestamp, technique, severity|
------------------------------------------------------------------------------------------------
+_______________________________________________________________________________________________________
+| Area                         | What Was Done                                                         |
+|------------------------------|-----------------------------------------------------------------------|
+| Detection Engineering        | Built custom Python engine parsing real Linux auth logs               |
+| Threat Hunting               | Correlated failed logins, privilege events, account creation          |
+| MITRE ATT&CK                 | Mapped all detections to T1110, T1078, T1136                          |
+| Incident Response            | Produced structured IR reports with root-cause and remediation        |
+| Sigma Rules                  | Wrote portable detection rules for all three techniques               |
+| Dashboard / Visualisation    | Built zero-dependency live SPA with Python HTTP server                |
+| IOC Management               | Auto-populated IOC store with IP, timestamp, technique, severity      |
+|Detection Tuning              | Implemented confidence scoring, severity mapping and alert suppression|
+|Detection Quality Engineering | Built TP/FP review workflow and False Positive Rate tracking          |
+-------------------------------------------------------------------------------------------------------
 ---
 
 ## Environment

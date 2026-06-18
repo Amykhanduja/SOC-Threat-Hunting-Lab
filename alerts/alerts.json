@@ -1,0 +1,11 @@
+[
+    {
+        "alert_id": "ALT-5fc2462f",
+        "timestamp": "2026-06-18 00:05:57 IST",
+        "type": "SSH Brute Force",
+        "ip": "127.0.0.1",
+        "confidence": 40,
+        "severity": "Medium",
+        "review_status": "FP"
+    }
+]

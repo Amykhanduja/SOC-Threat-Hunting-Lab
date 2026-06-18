@@ -1,5 +1,8 @@
+print("######## NEW VERSION LOADED ########")
+import os
 import time
 import re
+import uuid
 import json
 from collections import Counter
 from datetime import datetime, timezone, timedelta
@@ -10,6 +13,56 @@ SUDO_LOG       = "logs/sudo_logs.txt"
 USER_LOG       = "logs/user_creation_logs.txt"
 
 failed_ips = Counter()
+alerted_ips = {}
+
+def generate_alert_id():
+    return "ALT-" + str(uuid.uuid4())[:8]
+
+def calculate_bruteforce_confidence(failures):
+
+    confidence = 0
+
+    if failures >= 3:
+        confidence += 40
+
+    if failures >= 5:
+        confidence += 30
+
+    if failures >= 10:
+        confidence += 30
+
+    return min(confidence, 100)
+
+
+def get_severity(confidence):
+
+    if confidence >= 80:
+        return "Critical"
+
+    elif confidence >= 60:
+        return "High"
+
+    elif confidence >= 40:
+        return "Medium"
+
+    else:
+        return "Low"
+
+def save_alert(alert):
+
+    file_path = "alerts/alerts.json"
+
+    try:
+        with open(file_path, "r") as f:
+            alerts = json.load(f)
+
+    except:
+        alerts = []
+
+    alerts.append(alert)
+
+    with open(file_path, "w") as f:
+        json.dump(alerts, f, indent=4)
 
 
 def save_ioc(ip, attack, severity, mitre):
@@ -79,20 +132,48 @@ with open(LOG_FILE, "r") as f:
                 )
 
                 if attempts >= 3:
+                     confidence = calculate_bruteforce_confidence(
+                         attempts
+                     )
 
-                    print("\n===================")
-                    print("[HIGH ALERT]")
-                    print("SSH Brute Force Detected")
-                    print(f"Source IP: {ip}")
-                    print(f"Attempts : {attempts}")
-                    print("MITRE: T1110")
-                    print("=================")
-                    save_ioc(ip, "SSH Brute Force", "HIGH", "T1110")
-                    save_to_log(
-                        BRUTEFORCE_LOG,
-                        f"SSH Brute Force Detected - Source IP: {ip} Attempts: {attempts} MITRE: T1110"
-                    )
+                     severity = get_severity(
+                         confidence
+                     )
+                     previous_severity = alerted_ips.get(ip)
 
+                     if previous_severity == severity:
+                          continue
+
+                     alerted_ips[ip] = severity
+
+                     print("\n===================")
+                     print("[HIGH ALERT]")
+                     print("SSH Brute Force Detected")
+                     print(f"Source IP: {ip}")
+                     print(f"Attempts : {attempts}")
+                     print("MITRE: T1110")
+                     print(f"Confidence: {confidence}%")
+                     print(f"Severity  : {severity}")
+                     print("=================")
+                     alert = {
+                         "alert_id": generate_alert_id(),
+                         "timestamp": datetime.now(IST).strftime(
+                              "%Y-%m-%d %H:%M:%S IST"
+                         ),
+                         "type": "SSH Brute Force",
+                         "ip": ip,
+                         "confidence": confidence,
+                         "severity": severity,
+                         "review_status": "Pending"
+                     }
+
+                     save_alert(alert)
+
+                     save_ioc(ip, "SSH Brute Force", severity, "T1110")
+                     save_to_log(
+                         BRUTEFORCE_LOG,
+                         f"SSH Brute Force Detected - Source IP: {ip} Attempts: {attempts} Confidence:{confidence}% Severity:{severity} MITRE: T1110"
+                     )
 
 
         # ── Privilege Escalation (T1078) ─────────────────────
